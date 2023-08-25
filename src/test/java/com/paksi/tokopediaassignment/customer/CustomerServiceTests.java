@@ -31,10 +31,11 @@ class CustomerServiceTests {
 
     @Test
     void findById_shouldThrowCustomerNotFoundException_whenGivenIdIs1AndCustomerDoesNotExistsInDatabase() {
-        Customer customer = Customer.builder().id(1L).build();
+        Long id = 1L;
+        Customer customer = Customer.builder().id(id).build();
         Optional<Customer> existingOptionalCustomer = Optional.empty();
         Mockito.when(this.customerRepository.findById(customer.getId())).thenReturn(existingOptionalCustomer);
         
-        Assertions.assertThrows(CustomerNotFoundException.class, () -> this.customerService.findById(customer.getId()));
+        Assertions.assertThrows(CustomerNotFoundException.class, () -> this.customerService.findById(id));
     }
 }
