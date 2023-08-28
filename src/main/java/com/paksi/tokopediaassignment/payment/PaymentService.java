@@ -19,4 +19,13 @@ public class PaymentService {
         newPayment.setCustomer(existingCustomer);
         return this.paymentReposity.save(newPayment);
     }
+
+    public Payment update(Payment payment) {
+        Payment existingPayment = this.paymentReposity.findById(payment.getId()).orElseThrow(PaymentNotFoundException::new);
+        Customer existingCustomer = this.customerService.findById(payment.getCustomer().getId());
+        payment.setCustomer(existingCustomer);
+        payment.setId(existingPayment.getId());
+
+        return this.paymentReposity.save(payment);
+    }
 }
