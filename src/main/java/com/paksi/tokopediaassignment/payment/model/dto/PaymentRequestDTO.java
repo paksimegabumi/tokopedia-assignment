@@ -6,6 +6,9 @@ import com.paksi.tokopediaassignment.customer.Customer;
 import com.paksi.tokopediaassignment.payment.model.Payment;
 import com.paksi.tokopediaassignment.paymenttype.PaymentType;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,14 +22,18 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PaymentRequestDTO {
     private Long id;
+
+    @Min(1000)
     private double amount;
+
     private PaymentType paymentType;
+
     private LocalDateTime date;
+
     private Customer customer;
 
     public Payment convertToEntity() {
         return Payment.builder().id(this.id).amount(this.amount).paymentType(this.paymentType).date(this.date)
                 .customer(this.customer).build();
     }
-
 }

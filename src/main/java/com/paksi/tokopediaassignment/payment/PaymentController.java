@@ -12,6 +12,7 @@ import com.paksi.tokopediaassignment.payment.model.Payment;
 import com.paksi.tokopediaassignment.payment.model.dto.PaymentRequestDTO;
 import com.paksi.tokopediaassignment.payment.model.dto.PaymentResponseDTO;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -21,7 +22,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/payments")
-    public ResponseEntity<PaymentResponseDTO> create(@RequestBody PaymentRequestDTO paymentRequestDTO) {
+    public ResponseEntity<PaymentResponseDTO> create(@Valid @RequestBody PaymentRequestDTO paymentRequestDTO) {
         Payment newPayment = paymentRequestDTO.convertToEntity();
 
         Payment savedPayment = this.paymentService.create(newPayment);
