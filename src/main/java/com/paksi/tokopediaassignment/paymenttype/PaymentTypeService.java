@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PaymentTypeService {
-    private PaymentTypeRepository paymentTypeRepository;
+    private final PaymentTypeRepository paymentTypeRepository;
 
     public PaymentType findById(Long id) {
         return this.paymentTypeRepository.findById(id).orElseThrow(PaymentTypeNotFoundException::new);
