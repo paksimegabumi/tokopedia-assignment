@@ -43,6 +43,12 @@ public class PaymentService {
         return this.paymentReposity.save(payment);
     }
 
+    public void delete(Long id) {
+        Payment existingPayment = this.paymentReposity.findById(id)
+                .orElseThrow(PaymentNotFoundException::new);
+        this.paymentReposity.delete(existingPayment);
+    }
+
     private void validatePaymentType(Payment payment) {
         PaymentType existingPaymentType = this.paymentTypeService.findById(payment.getPaymentType().getId());
         payment.setPaymentType(existingPaymentType);

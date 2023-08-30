@@ -2,12 +2,15 @@ package com.paksi.tokopediaassignment.payment;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paksi.tokopediaassignment.common.Constants;
 import com.paksi.tokopediaassignment.payment.model.Payment;
 import com.paksi.tokopediaassignment.payment.model.dto.PaymentRequestDTO;
 import com.paksi.tokopediaassignment.payment.model.dto.PaymentResponseDTO;
@@ -39,5 +42,13 @@ public class PaymentController {
         Payment savedPayment = this.paymentService.update(payment);
 
         return ResponseEntity.ok(savedPayment.convertToDTO());
+    }
+
+    @DeleteMapping("/payments/{id}")
+    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
+
+        this.paymentService.delete(id);
+
+        return ResponseEntity.ok(Constants.Message.PAYMENT_DELETED);
     }
 }
