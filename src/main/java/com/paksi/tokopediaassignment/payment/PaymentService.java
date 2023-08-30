@@ -1,9 +1,13 @@
 package com.paksi.tokopediaassignment.payment;
 
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.paksi.tokopediaassignment.common.Constants;
 import com.paksi.tokopediaassignment.customer.Customer;
 import com.paksi.tokopediaassignment.customer.CustomerService;
 import com.paksi.tokopediaassignment.inventory.InventoryNotFoundException;
@@ -49,8 +53,22 @@ public class PaymentService {
         this.paymentReposity.delete(existingPayment);
     }
 
-    public Payment getOne(Long id) {
-        return this.paymentReposity.findById(id).orElse(new Payment());
+    public Page<Payment> get(Map<String, String> filters, Pageable page) {
+        Long customerId = Long.valueOf(filters.get(Constants.Filter.CUSTOMER_ID));
+        String paymentTypeName = filters.get(Constants.Filter.PAYMENT_TYPE_NAME);
+        Customer customer = Customer.builder().id(customerId).build();
+        PaymentType paymentType = this.paymentTypeService.findByName(paymentTypeName);
+
+        if (filters.containsKey(Constants.Filter.AMOUNT_FROM)
+                && filters.containsKey(Constants.Filter.AMOUNT_TO)) {
+            double amountFrom = Double.parseDouble(filters.get(Constants.Filter.AMOUNT_FROM));
+            double amountTo = Double.parseDouble(filters.get(Constants.Filter.AMOUNT_TO));
+
+            return this.paymentReposity.findAllByCustomerAndPaymentTypeAndAmountGreaterThanEqualAndAmountLessThanEqual(customer, paymentType,
+                    amountFrom, amountTo, page);
+        }
+
+        return this.paymentReposity.findAllByCustomerAndPaymentType(customer, paymentType, page);
     }
 
     private void validatePaymentType(Payment payment) {

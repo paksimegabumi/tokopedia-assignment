@@ -1,5 +1,14 @@
 package com.paksi.tokopediaassignment.payment;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -8,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.paksi.tokopediaassignment.common.Constants;
@@ -52,11 +62,40 @@ public class PaymentController {
         return ResponseEntity.ok(Constants.Message.PAYMENT_DELETED);
     }
 
-    @GetMapping("/payments/{id}")
-    public ResponseEntity<PaymentResponseDTO> getOne(@PathVariable("id") Long id) {
+    @GetMapping("/payments")
+    public ResponseEntity<Page<PaymentResponseDTO>> get(
+            @RequestParam(name = Constants.Filter.CUSTOMER_ID) String customerId,
+            @RequestParam(name = Constants.Filter.PAYMENT_TYPE_NAME) String paymentTypeName,
+            @RequestParam(name = Constants.Filter.AMOUNT_FROM, required = false) Optional<String> amountFrom,
+            @RequestParam(name = Constants.Filter.AMOUNT_TO, required = false) Optional<String> amountTo,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size) {
+        Pageable paging = PageRequest.of(page, size);
 
-        Payment existingPayment = this.paymentService.getOne(id);
+        Map<String, String> filters = this.mapFilters(customerId, paymentTypeName, amountFrom, amountTo);
 
-        return ResponseEntity.ok().body(existingPayment.convertToDTO());
+        Page<Payment> existingPayments = this.paymentService.get(filters, paging);
+        List<PaymentResponseDTO> paymentResponseDTOs = existingPayments.getContent().stream().map(Payment::convertToDTO)
+                .toList();
+        Page<PaymentResponseDTO> paymentResponseDTO = new PageImpl<>(paymentResponseDTOs, paging, size);
+
+        return ResponseEntity.ok(paymentResponseDTO);
+    }
+
+    private Map<String, String> mapFilters(String customerId, String paymentTypeName, Optional<String> amountFrom,
+            Optional<String> amountTo) {
+        Map<String, String> requestParameters = new HashMap<>();
+        requestParameters.put(Constants.Filter.CUSTOMER_ID, customerId);
+        requestParameters.put(Constants.Filter.PAYMENT_TYPE_NAME, paymentTypeName);
+
+        if (amountFrom.isPresent()) {
+            requestParameters.put(Constants.Filter.AMOUNT_FROM, amountFrom.get());
+        }
+
+        if (amountTo.isPresent()) {
+            requestParameters.put(Constants.Filter.AMOUNT_TO, amountTo.get());
+        }
+
+        return requestParameters;
     }
 }

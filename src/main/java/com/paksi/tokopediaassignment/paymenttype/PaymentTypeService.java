@@ -12,4 +12,8 @@ public class PaymentTypeService {
     public PaymentType findById(Long id) {
         return this.paymentTypeRepository.findById(id).orElseThrow(PaymentTypeNotFoundException::new);
     }
+
+    public PaymentType findByName(String paymentTypeName) {
+        return this.paymentTypeRepository.findByName(paymentTypeName).orElseThrow(PaymentTypeNotFoundException::new);
+    }
 }
