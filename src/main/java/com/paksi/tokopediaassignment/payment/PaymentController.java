@@ -51,4 +51,12 @@ public class PaymentController {
 
         return ResponseEntity.ok(Constants.Message.PAYMENT_DELETED);
     }
+
+    @GetMapping("/payments/{id}")
+    public ResponseEntity<PaymentResponseDTO> getOne(@PathVariable("id") Long id) {
+
+        Payment existingPayment = this.paymentService.getOne(id);
+
+        return ResponseEntity.ok().body(existingPayment.convertToDTO());
+    }
 }

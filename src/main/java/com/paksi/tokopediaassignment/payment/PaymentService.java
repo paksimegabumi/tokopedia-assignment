@@ -49,6 +49,10 @@ public class PaymentService {
         this.paymentReposity.delete(existingPayment);
     }
 
+    public Payment getOne(Long id) {
+        return this.paymentReposity.findById(id).orElse(new Payment());
+    }
+
     private void validatePaymentType(Payment payment) {
         PaymentType existingPaymentType = this.paymentTypeService.findById(payment.getPaymentType().getId());
         payment.setPaymentType(existingPaymentType);
