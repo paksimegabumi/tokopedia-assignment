@@ -1,8 +1,10 @@
 package com.paksi.tokopediaassignment.payment.model.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.paksi.tokopediaassignment.customer.Customer;
+import com.paksi.tokopediaassignment.paymentinventory.PaymentInventoryResponseDTO;
 import com.paksi.tokopediaassignment.paymenttype.PaymentType;
 
 import lombok.AllArgsConstructor;
@@ -24,4 +26,5 @@ public class PaymentResponseDTO {
     private PaymentType paymentType;
     private LocalDateTime date;
     private Customer customer;
+    private List<PaymentInventoryResponseDTO> paymentInventoryResponseDTOs;
 }
