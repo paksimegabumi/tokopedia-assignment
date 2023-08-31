@@ -3,6 +3,7 @@ package com.paksi.tokopediaassignment.payment.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.paksi.tokopediaassignment.customer.Customer;
 import com.paksi.tokopediaassignment.payment.model.dto.PaymentResponseDTO;
 import com.paksi.tokopediaassignment.paymentinventory.PaymentInventory;
@@ -45,6 +46,7 @@ public class Payment {
     @ManyToOne
     private Customer customer;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
     private List<PaymentInventory> paymentInventories;
 

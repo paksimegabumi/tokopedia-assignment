@@ -75,10 +75,7 @@ public class PaymentController {
         Map<String, String> filters = this.mapFilters(customerId, paymentTypeName, amountFrom, amountTo);
 
         Page<Payment> existingPayments = this.paymentService.get(filters, paging);
-        List<PaymentResponseDTO> paymentResponseDTOs = existingPayments.getContent().stream().map(Payment::convertToDTO)
-                .toList();
-        Page<PaymentResponseDTO> paymentResponseDTO = new PageImpl<>(paymentResponseDTOs, paging, size);
-
+        Page<PaymentResponseDTO> paymentResponseDTO = existingPayments.map(Payment::convertToDTO);
         return ResponseEntity.ok(paymentResponseDTO);
     }
 
