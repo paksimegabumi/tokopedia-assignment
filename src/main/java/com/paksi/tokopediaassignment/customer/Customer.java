@@ -24,4 +24,6 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotBlank
     private Long id;
+
+    private String name;
 }
