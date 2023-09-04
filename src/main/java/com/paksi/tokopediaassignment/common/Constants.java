@@ -22,5 +22,6 @@ public class Constants {
         public static final String AMOUNT_TO = "amountTo";
         public static final String PAGE_NUMBER = "page";
         public static final String PAGE_SIZE = "size";
+        public static final String KEYWORD = "keyword";
     }
 }

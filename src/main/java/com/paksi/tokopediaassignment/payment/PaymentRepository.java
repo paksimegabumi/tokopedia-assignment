@@ -11,4 +11,5 @@ import com.paksi.tokopediaassignment.paymenttype.PaymentType;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     public Page<Payment> findAllByCustomerAndPaymentTypeAndAmountGreaterThanEqualAndAmountLessThanEqual(Customer customer, PaymentType paymentType, double amountFrom, double amountTo, Pageable page);
     public Page<Payment> findAllByCustomerAndPaymentType(Customer customer, PaymentType paymentType, Pageable page);
+    public Page<Payment> findAll(Pageable page);
 }

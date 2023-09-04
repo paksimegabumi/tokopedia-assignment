@@ -54,21 +54,30 @@ public class PaymentService {
     }
 
     public Page<Payment> get(Map<String, String> filters, Pageable page) {
-        Long customerId = Long.valueOf(filters.get(Constants.Filter.CUSTOMER_ID));
-        String paymentTypeName = filters.get(Constants.Filter.PAYMENT_TYPE_NAME);
-        Customer customer = Customer.builder().id(customerId).build();
-        PaymentType paymentType = this.paymentTypeService.findByName(paymentTypeName);
+        // Customer customer;
+        // PaymentType paymentType;
+        // if (filters.containsKey(Constants.Filter.CUSTOMER_ID)) {
+        //     Long customerId = Long.valueOf(filters.get(Constants.Filter.CUSTOMER_ID));
+        //     customer = Customer.builder().id(customerId).build();
+        // }
 
-        if (filters.containsKey(Constants.Filter.AMOUNT_FROM)
-                && filters.containsKey(Constants.Filter.AMOUNT_TO)) {
-            double amountFrom = Double.parseDouble(filters.get(Constants.Filter.AMOUNT_FROM));
-            double amountTo = Double.parseDouble(filters.get(Constants.Filter.AMOUNT_TO));
+        // if (filters.containsKey(Constants.Filter.PAYMENT_TYPE_NAME)) {
+        //     String paymentTypeName = filters.get(Constants.Filter.PAYMENT_TYPE_NAME);
 
-            return this.paymentReposity.findAllByCustomerAndPaymentTypeAndAmountGreaterThanEqualAndAmountLessThanEqual(customer, paymentType,
-                    amountFrom, amountTo, page);
-        }
+        //     paymentType = this.paymentTypeService.findByName(paymentTypeName);
+        // }
 
-        return this.paymentReposity.findAllByCustomerAndPaymentType(customer, paymentType, page);
+        // if (filters.containsKey(Constants.Filter.AMOUNT_FROM)
+        //         && filters.containsKey(Constants.Filter.AMOUNT_TO)) {
+        //     double amountFrom = Double.parseDouble(filters.get(Constants.Filter.AMOUNT_FROM));
+        //     double amountTo = Double.parseDouble(filters.get(Constants.Filter.AMOUNT_TO));
+
+        //     return this.paymentReposity.findAllByCustomerAndPaymentTypeAndAmountGreaterThanEqualAndAmountLessThanEqual(
+        //             customer, paymentType,
+        //             amountFrom, amountTo, page);
+        // }
+
+        return this.paymentReposity.findAll(page);
     }
 
     private void validatePaymentType(Payment payment) {

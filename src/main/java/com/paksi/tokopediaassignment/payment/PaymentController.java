@@ -22,6 +22,9 @@ import com.paksi.tokopediaassignment.common.Constants;
 import com.paksi.tokopediaassignment.payment.model.Payment;
 import com.paksi.tokopediaassignment.payment.model.dto.PaymentRequestDTO;
 import com.paksi.tokopediaassignment.payment.model.dto.PaymentResponseDTO;
+import com.paksi.tokopediaassignment.paymentinventory.view.PaymentInventoryView;
+import com.paksi.tokopediaassignment.paymentinventory.view.PaymentInventoryViewRepository;
+import com.paksi.tokopediaassignment.paymentinventory.view.PaymentInventoryViewService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class PaymentController {
-
+    private final PaymentInventoryViewService paymentInventoryViewService;
     private final PaymentService paymentService;
 
     @PostMapping("/payments")
@@ -61,20 +64,25 @@ public class PaymentController {
     }
 
     @GetMapping("/payments")
-    public ResponseEntity<Page<PaymentResponseDTO>> get(
-            @RequestParam(name = Constants.Filter.CUSTOMER_ID) String customerId,
-            @RequestParam(name = Constants.Filter.PAYMENT_TYPE_NAME) String paymentTypeName,
+    public ResponseEntity<Page<PaymentInventoryView>> get(
+            @RequestParam(name = Constants.Filter.KEYWORD, required = false) String keyword,
+            @RequestParam(name = Constants.Filter.CUSTOMER_ID, required = false) String customerId,
+            @RequestParam(name = Constants.Filter.PAYMENT_TYPE_NAME, required = false) String paymentTypeName,
             @RequestParam(name = Constants.Filter.AMOUNT_FROM, required = false) Optional<String> amountFrom,
             @RequestParam(name = Constants.Filter.AMOUNT_TO, required = false) Optional<String> amountTo,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable paging = PageRequest.of(page, size);
 
-        Map<String, String> filters = this.mapFilters(customerId, paymentTypeName, amountFrom, amountTo);
+        // Map<String, String> filters = this.mapFilters(customerId, paymentTypeName,
+        // amountFrom, amountTo);
 
-        Page<Payment> existingPayments = this.paymentService.get(filters, paging);
-        Page<PaymentResponseDTO> paymentResponseDTO = existingPayments.map(Payment::convertToDTO);
-        return ResponseEntity.ok(paymentResponseDTO);
+        // Page<Payment> existingPayments = this.paymentService.get(filters, paging);
+        // Page<PaymentResponseDTO> paymentResponseDTO =
+        // existingPayments.map(Payment::convertToDTO);
+        // return ResponseEntity.ok(paymentResponseDTO);
+        Page<PaymentInventoryView> existingPayments = this.paymentInventoryViewService.findEmployeeProjectsExampleMatcher(keyword, paging);
+        return ResponseEntity.ok(existingPayments);
     }
 
     private Map<String, String> mapFilters(String customerId, String paymentTypeName, Optional<String> amountFrom,
